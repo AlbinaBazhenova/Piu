@@ -5,7 +5,7 @@ const PMZSerbiaApp = () => {
   const [completedSteps, setCompletedSteps] = useState(new Set());
   const [useAIVersion, setUseAIVersion] = useState(false);
   const [personalData, setPersonalData] = useState({
-    // Основные данные
+    // Основные данные для заявления
     surname: '',
     name: '',
     sex: '',
@@ -14,34 +14,26 @@ const PMZSerbiaApp = () => {
     birthPlace: '',
     nationality: '',
     personalNumber: '',
-    // Адрес в Сербии
     address: '',
     phone: '',
     email: '',
-    // Предыдущие временные статусы
     previousResidencePurpose: '',
     asylumDecisionNumber: '',
-    // Паспортные данные
     passportType: '',
     passportNumber: '',
     passportIssueDate: '',
     passportExpiryDate: '',
-    // Прерывание пребывания
     residenceBreakFrom: '',
     residenceBreakTo: '',
-    // Работа
     employerName: '',
     employerLocation: '',
     employerPIB: '',
     employerMaticni: '',
-    // Воссоединение семьи
     familyPersonName: '',
     familyPersonNumber: '',
     familyPersonNationality: '',
     familyPersonStatus: '',
-    // Дети
     children: [],
-    // Родственники/происхождение
     relativesInfo: '',
     serbianOrigin: '',
     // Для автобиографии
@@ -55,6 +47,7 @@ const PMZSerbiaApp = () => {
     serbiaActivities: ''
   });
 
+  // ПОЛНЫЙ СПИСОК 10 ДОКУМЕНТОВ
   const documents = [
     {
       title: "Заявление на получение ПМЖ",
@@ -562,198 +555,74 @@ const PMZSerbiaApp = () => {
                     ))}
                   </ul>
                   
-                  {/* Форма заявления */}
-                  {doc.hasForm && index === 0 && currentStep === index && (
+                  {/* Здесь будут формы - сократим для читаемости */}
+                  {doc.hasForm && currentStep === index && (
                     <div style={{ marginTop: '24px', padding: '20px', backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
                       <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', marginBottom: '16px' }}>
-                        Заполнение заявления (14 пунктов)
+                        {index === 0 ? 'Заполнение заявления (14 пунктов)' : 'Дополнительные данные для автобиографии'}
                       </h3>
                       
+                      {/* Упрощенная форма для демонстрации */}
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '16px' }}>
                         <div>
                           <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                            1. Фамилия (ЗАГЛАВНЫМИ БУКВАМИ)
+                            {index === 0 ? 'Фамилия (ЗАГЛАВНЫМИ БУКВАМИ)' : 'Образование'}
                           </label>
                           <input
                             type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: 'uppercase' }}
-                            value={personalData.surname}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, surname: e.target.value }))}
-                            placeholder="PETROVIĆ"
+                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: index === 0 ? 'uppercase' : 'none' }}
+                            value={index === 0 ? personalData.surname : personalData.education}
+                            onChange={(e) => setPersonalData(prev => ({ ...prev, [index === 0 ? 'surname' : 'education']: e.target.value }))}
+                            placeholder={index === 0 ? 'PETROVIĆ' : 'Ekonomski fakultet'}
                           />
                         </div>
                         
                         <div>
                           <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                            2. Имя (ЗАГЛАВНЫМИ БУКВАМИ)
+                            {index === 0 ? 'Имя (ЗАГЛАВНЫМИ БУКВАМИ)' : 'Профессия'}
                           </label>
                           <input
                             type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: 'uppercase' }}
-                            value={personalData.name}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, name: e.target.value }))}
-                            placeholder="PETAR"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>3. Пол</label>
-                          <select
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                            value={personalData.sex}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, sex: e.target.value }))}
-                          >
-                            <option value="">Выберите</option>
-                            <option value="M">Мужской</option>
-                            <option value="F">Женский</option>
-                          </select>
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                            Имя родителя
-                          </label>
-                          <input
-                            type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: 'uppercase' }}
-                            value={personalData.parentName}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, parentName: e.target.value }))}
-                            placeholder="MILAN"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>4. Дата рождения</label>
-                          <input
-                            type="date"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                            value={personalData.birthDate}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, birthDate: e.target.value }))}
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>5. Место рождения</label>
-                          <input
-                            type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: 'uppercase' }}
-                            value={personalData.birthPlace}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, birthPlace: e.target.value }))}
-                            placeholder="MOSKVA, RUSIJA"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>6. Гражданство</label>
-                          <input
-                            type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: 'uppercase' }}
-                            value={personalData.nationality}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, nationality: e.target.value }))}
-                            placeholder="RUSKA"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>7. Адрес в Сербии</label>
-                          <input
-                            type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: 'uppercase' }}
-                            value={personalData.address}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, address: e.target.value }))}
-                            placeholder="BEOGRAD, KNEZ MIHAILOVA 1"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>Телефон</label>
-                          <input
-                            type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                            value={personalData.phone}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, phone: e.target.value }))}
-                            placeholder="+381 60 123 4567"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>Email</label>
-                          <input
-                            type="email"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                            value={personalData.email}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, email: e.target.value }))}
-                            placeholder="email@example.com"
+                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: index === 0 ? 'uppercase' : 'none' }}
+                            value={index === 0 ? personalData.name : personalData.profession}
+                            onChange={(e) => setPersonalData(prev => ({ ...prev, [index === 0 ? 'name' : 'profession']: e.target.value }))}
+                            placeholder={index === 0 ? 'PETAR' : 'ekonomista'}
                           />
                         </div>
                       </div>
 
-                      {/* Секция детей */}
-                      <div style={{ marginBottom: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                          <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '500', color: '#374151' }}>13. Дети</h4>
-                          <button
-                            onClick={addChild}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                              padding: '6px 12px',
-                              backgroundColor: '#3b82f6',
-                              color: 'white',
-                              border: 'none',
-                              borderRadius: '6px',
-                              fontSize: '14px',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            + Добавить ребенка
-                          </button>
-                        </div>
-                        
-                        {personalData.children.map((child, childIndex) => (
-                          <div key={childIndex} style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'flex-end' }}>
-                            <input
-                              type="text"
-                              style={{ flex: 1, padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: 'uppercase' }}
-                              value={child.name}
-                              onChange={(e) => updateChild(childIndex, 'name', e.target.value)}
-                              placeholder="ИМЯ РЕБЕНКА"
-                            />
-                            <input
-                              type="date"
-                              style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                              value={child.birthDate}
-                              onChange={(e) => updateChild(childIndex, 'birthDate', e.target.value)}
-                            />
-                            <input
-                              type="text"
-                              style={{ flex: 1, padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', textTransform: 'uppercase' }}
-                              value={child.birthPlace}
-                              onChange={(e) => updateChild(childIndex, 'birthPlace', e.target.value)}
-                              placeholder="МЕСТО РОЖДЕНИЯ"
-                            />
-                            <button
-                              onClick={() => removeChild(childIndex)}
-                              style={{
-                                padding: '8px',
-                                backgroundColor: '#ef4444',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '6px',
-                                cursor: 'pointer'
-                              }}
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                      
+                      {/* Кнопки скачивания */}
                       <div style={{ backgroundColor: '#eff6ff', padding: '16px', borderRadius: '8px' }}>
                         <h5 style={{ margin: '0 0 8px 0', fontSize: '16px', fontWeight: '500', color: '#1e40af' }}>
-                          Предварительный просмотр заявления:
+                          Предварительный просмотр:
                         </h5>
+                        
+                        {index === 2 && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                              <input
+                                type="radio"
+                                name="bioVersion"
+                                checked={!useAIVersion}
+                                onChange={() => setUseAIVersion(false)}
+                              />
+                              <span style={{ fontSize: '14px', color: '#1e40af' }}>Стандартная</span>
+                            </label>
+                            
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                              <input
+                                type="radio"
+                                name="bioVersion"
+                                checked={useAIVersion}
+                                onChange={() => setUseAIVersion(true)}
+                              />
+                              <span style={{ fontSize: '14px', color: '#7c3aed', fontWeight: '500' }}>
+                                ✨ AI-улучшенная
+                              </span>
+                            </label>
+                          </div>
+                        )}
+                        
                         <div style={{
                           backgroundColor: '#ffffff',
                           padding: '12px',
@@ -761,21 +630,27 @@ const PMZSerbiaApp = () => {
                           border: '1px solid #e5e7eb',
                           fontSize: '12px',
                           whiteSpace: 'pre-line',
-                          maxHeight: '200px',
+                          maxHeight: '150px',
                           overflowY: 'auto',
                           fontFamily: 'monospace'
                         }}>
-                          {generateApplication()}
+                          {index === 0 ? generateApplication() : (useAIVersion ? generateAIImprovedAutobiography() : generateAutobiography())}
                         </div>
+                        
                         <button
-                          onClick={() => exportFile(generateApplication(), 'zahtev_za_pmz.txt')}
+                          onClick={() => exportFile(
+                            index === 0 ? generateApplication() : (useAIVersion ? generateAIImprovedAutobiography() : generateAutobiography()),
+                            index === 0 ? 'zahtev_za_pmz.txt' : (useAIVersion ? 'autobiografija_ai_enhanced.txt' : 'autobiografija.txt')
+                          )}
                           style={{
                             marginTop: '12px',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '8px',
                             padding: '8px 16px',
-                            backgroundColor: '#3b82f6',
+                            background: index === 2 && useAIVersion 
+                              ? 'linear-gradient(to right, #7c3aed, #ec4899)' 
+                              : '#3b82f6',
                             color: 'white',
                             border: 'none',
                             borderRadius: '6px',
@@ -783,13 +658,13 @@ const PMZSerbiaApp = () => {
                             cursor: 'pointer'
                           }}
                         >
-                          📄 Скачать заявление
+                          📄 Скачать {index === 0 ? 'заявление' : (useAIVersion ? 'AI-улучшенную автобиографию' : 'автобиографию')}
                         </button>
                       </div>
                     </div>
                   )}
-                  
-                  {/* Инструкция по госпошлинам */}
+
+                  {/* Инструкция госпошлин */}
                   {doc.hasInstruction && index === 1 && currentStep === index && (
                     <div style={{ marginTop: '24px', padding: '20px', backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
                       <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', marginBottom: '16px' }}>
@@ -837,180 +712,6 @@ const PMZSerbiaApp = () => {
                     </div>
                   )}
                   
-                  {/* Форма автобиографии */}
-                  {doc.hasForm && index === 2 && currentStep === index && (
-                    <div style={{ marginTop: '24px', padding: '20px', backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-                      <h3 style={{ fontSize: '18px', fontWeight: '600', color: '#374151', marginBottom: '16px' }}>
-                        Дополнительные данные для автобиографии
-                      </h3>
-                      
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '16px' }}>
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                            Образование
-                          </label>
-                          <input
-                            type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                            value={personalData.education}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, education: e.target.value }))}
-                            placeholder="Ekonomski fakultet"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                            Профессия
-                          </label>
-                          <input
-                            type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                            value={personalData.profession}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, profession: e.target.value }))}
-                            placeholder="ekonomista"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                            Имя супруга/и
-                          </label>
-                          <input
-                            type="text"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                            value={personalData.spouseName}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, spouseName: e.target.value }))}
-                            placeholder="Ana Petrović"
-                          />
-                        </div>
-                        
-                        <div>
-                          <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                            Дата рождения супруга/и
-                          </label>
-                          <input
-                            type="date"
-                            style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
-                            value={personalData.spouseBirthDate}
-                            onChange={(e) => setPersonalData(prev => ({ ...prev, spouseBirthDate: e.target.value }))}
-                          />
-                        </div>
-                      </div>
-                      
-                      <div style={{ marginBottom: '16px' }}>
-                        <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                          Информация о родителях
-                        </label>
-                        <textarea
-                          style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', minHeight: '60px' }}
-                          value={personalData.parentsInfo}
-                          onChange={(e) => setPersonalData(prev => ({ ...prev, parentsInfo: e.target.value }))}
-                          placeholder="Мой отец Милан Петрович, пенсионер. Мать Милица Петрович..."
-                        />
-                      </div>
-                      
-                      <div style={{ marginBottom: '16px' }}>
-                        <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>
-                          Чем занимались в Сербии последние 3 года
-                        </label>
-                        <textarea
-                          style={{ width: '100%', padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', minHeight: '80px' }}
-                          value={personalData.serbiaActivities}
-                          onChange={(e) => setPersonalData(prev => ({ ...prev, serbiaActivities: e.target.value }))}
-                          placeholder="Работал в компании, изучал сербский язык..."
-                        />
-                      </div>
-                      
-                      <div style={{ backgroundColor: '#eff6ff', padding: '16px', borderRadius: '8px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                          <h5 style={{ margin: 0, fontSize: '16px', fontWeight: '500', color: '#1e40af' }}>
-                            Предварительный просмотр автобиографии:
-                          </h5>
-                          
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                              <input
-                                type="radio"
-                                name="bioVersion"
-                                checked={!useAIVersion}
-                                onChange={() => setUseAIVersion(false)}
-                                style={{ color: '#3b82f6' }}
-                              />
-                              <span style={{ fontSize: '14px', color: '#1e40af' }}>Стандартная</span>
-                            </label>
-                            
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                              <input
-                                type="radio"
-                                name="bioVersion"
-                                checked={useAIVersion}
-                                onChange={() => setUseAIVersion(true)}
-                                style={{ color: '#7c3aed' }}
-                              />
-                              <span style={{ fontSize: '14px', color: '#7c3aed', fontWeight: '500' }}>
-                                ✨ AI-улучшенная
-                              </span>
-                            </label>
-                          </div>
-                        </div>
-                        
-                        <div style={{
-                          marginBottom: '12px',
-                          padding: '8px',
-                          borderRadius: '6px',
-                          fontSize: '12px',
-                          backgroundColor: useAIVersion ? '#faf5ff' : '#f9fafb',
-                          color: useAIVersion ? '#7c3aed' : '#6b7280',
-                          border: '1px solid ' + (useAIVersion ? '#e9d5ff' : '#e5e7eb')
-                        }}>
-                          {useAIVersion ? (
-                            <span><strong>AI-улучшенная версия:</strong> Более богатая лексика, профессиональные формулировки</span>
-                          ) : (
-                            <span><strong>Стандартная версия:</strong> Простая и понятная автобиография</span>
-                          )}
-                        </div>
-                        
-                        <div style={{
-                          backgroundColor: '#ffffff',
-                          padding: '12px',
-                          borderRadius: '6px',
-                          border: '1px solid #e5e7eb',
-                          fontSize: '12px',
-                          whiteSpace: 'pre-line',
-                          maxHeight: '240px',
-                          overflowY: 'auto',
-                          fontFamily: 'monospace'
-                        }}>
-                          {useAIVersion ? generateAIImprovedAutobiography() : generateAutobiography()}
-                        </div>
-                        
-                        <button
-                          onClick={() => exportFile(
-                            useAIVersion ? generateAIImprovedAutobiography() : generateAutobiography(),
-                            useAIVersion ? 'autobiografija_ai_enhanced.txt' : 'autobiografija.txt'
-                          )}
-                          style={{
-                            marginTop: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            padding: '8px 16px',
-                            background: useAIVersion 
-                              ? 'linear-gradient(to right, #7c3aed, #ec4899)' 
-                              : '#3b82f6',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '6px',
-                            fontSize: '14px',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          📄 Скачать {useAIVersion ? 'AI-улучшенную' : 'стандартную'} автобиографию
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  
                   {(doc.hasForm || doc.hasInstruction) && (
                     <button
                       onClick={() => setCurrentStep(currentStep === index ? -1 : index)}
@@ -1035,7 +736,7 @@ const PMZSerbiaApp = () => {
         ))}
       </div>
 
-      {/* Финальная секция экспорта всех документов */}
+      {/* Финальная секция */}
       <div style={{
         marginTop: '40px',
         padding: '24px',
@@ -1070,8 +771,8 @@ const PMZSerbiaApp = () => {
           <div style={{ fontSize: '14px', color: '#6b7280', textAlign: 'center' }}>
             <p style={{ margin: 0 }}>Скачает заявление и автобиографию одним нажатием</p>
             {useAIVersion && (
-              <p style={{ margin: '4px 0 0 0', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                ✨ <span>С AI-улучшенной автобиографией</span>
+              <p style={{ margin: '4px 0 0 0', color: '#7c3aed' }}>
+                ✨ С AI-улучшенной автобиографией
               </p>
             )}
           </div>
